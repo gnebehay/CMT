@@ -113,8 +113,6 @@ class CMT(object):
 		if keypoints.size > 1:
 
 			#Extract the keypoint classes
-			#Careful: tracked_classes is assumed to be sorted - take care of it at end of loop
-			#AND it might contain duplicate elements
 			keypoint_classes = keypoints[:,2].squeeze().astype(np.int) 
 
 			#Retain singular dimension
@@ -122,7 +120,6 @@ class CMT(object):
 				keypoint_classes = keypoint_classes[None]
 
 			#Sort
-			#TODO: Why do we sort here if we assume it is already sorted?
 			ind_sort = argsort(keypoint_classes)
 			keypoints = keypoints[ind_sort]
 			keypoint_classes = keypoint_classes[ind_sort]
@@ -134,7 +131,6 @@ class CMT(object):
 			all_combs = all_combs[all_combs[:,0] != all_combs[:,1],:]
 
 			#Measure distance between allcombs[0] and allcombs[1]
-			#TODO: Wrong comment?
 			ind1 = all_combs[:,0] 
 			ind2 = all_combs[:,1]
 
@@ -162,11 +158,8 @@ class CMT(object):
 				scalechange = dists / original_dists
 
 				#Compute angles
-
 				angles = np.empty((pts_allcombs0.shape[0]))
 
-
-				#We will now try to vectorise this loop
 				v=pts_allcombs1 - pts_allcombs0
 				angles = np.arctan2(v[:,1],v[:,0])
 				
@@ -178,7 +171,6 @@ class CMT(object):
 				long_way_angles = np.abs(angle_diffs) > math.pi
 
 				angle_diffs[long_way_angles] = angle_diffs[long_way_angles] - np.sign(angle_diffs[long_way_angles]) * 2 * math.pi
-
 
 				scale_estimate = median(scalechange)
 				if not self.estimate_scale:
@@ -225,37 +217,22 @@ class CMT(object):
 				#Compute object center
 				center = np.mean(votes, axis=0)
 
-				#TODO: Shouldn't we recompute scale_estimate, med_rot here?
-
 		return (center, scale_estimate, med_rot, keypoints)
 
-	#Detection, Description and Tracking of keypoints is quite fast.
-	#Most of the time is spent in estimate
 	def process_frame(self, im_gray):
-		#Track keypoints
-		tic = time.time()
+
 		tracked_keypoints, status = gnebehay.track(self.im_prev, im_gray, self.active_keypoints)
-		toc = time.time()
-		#print ' track_time: {0:.0f}ms'.format(1000*(toc-tic))
-		tic = time.time()
 		(center, scale_estimate, rotation_estimate, tracked_keypoints) = self.estimate(tracked_keypoints)
-		toc = time.time()
-		#print ' estimate_time: {0:.0f}ms'.format(1000*(toc-tic))
 
 		#Detect keypoints, compute descriptors
 		tic = time.time()
 		keypoints_cv = self.detector.detect(im_gray) 
 		keypoints_cv, features = self.descriptor.compute(im_gray, keypoints_cv)
-		toc = time.time()
-		#print ' det_desc_time: {0:.0f}ms'.format(1000*(toc-tic))
-
-		tic = time.time()
 
 		#Create list of active keypoints
 		active_keypoints = zeros((0,3)) 
 
 		#For each keypoint and its descriptor
-		#TODO: This loop could probably be optimised, as some comparisons are unnecessary
 		if len(keypoints_cv) > 0:
 			for (keypoint_cv, feature) in zip(keypoints_cv, features):
 
@@ -264,7 +241,6 @@ class CMT(object):
 
 				#First: Match over whole image
 				#Compute distances to all descriptors
-				#TODO: Why do we match to feature database here, but to selected features above?
 				matches = self.matcher.match(self.features_database, feature[None,:])
 				distances = np.array([m.distance for m in matches])
 
@@ -281,7 +257,7 @@ class CMT(object):
 				secondBestInd = sorted_conf[1]
 
 				#Compute distance ratio according to Lowe
-				ratio = (1-combined[bestInd]) / (1-combined[secondBestInd]) #TODO: Use combined values or distances?
+				ratio = (1-combined[bestInd]) / (1-combined[secondBestInd])
 
 				#Extract class of best match
 				keypoint_class = classes[bestInd]
@@ -325,7 +301,7 @@ class CMT(object):
 					secondBestInd = sorted_conf[1]
 
 					#Compute distance ratio according to Lowe
-					ratio = (1-combined[bestInd]) / (1-combined[secondBestInd]) #TODO: Use combined values or distances?
+					ratio = (1-combined[bestInd]) / (1-combined[secondBestInd])
 
 					#Extract class of best match
 					keypoint_class = classes[bestInd]
@@ -342,8 +318,6 @@ class CMT(object):
 							active_keypoints = np.delete(active_keypoints, same_class, axis=0)
 
 						active_keypoints = append(active_keypoints, array([new_kpt]), axis=0)
-
-
 
 		#If some keypoints have been tracked
 		if tracked_keypoints.size > 0:
@@ -365,11 +339,6 @@ class CMT(object):
 
 		#Update object state estimate
 		active_keypoints_before = active_keypoints
-		toc = time.time()
-		#print ' some_time: {0:.0f}ms'.format(1000*(toc-tic))
-		tic = time.time()
-		#Don't do it again
-		#(center, scale_estimate, rotation_estimate, active_keypoints) = self.estimate(active_keypoints)
 		self.center = center
 		self.scale_estimate = scale_estimate
 		self.rotation_estimate = rotation_estimate
@@ -378,7 +347,6 @@ class CMT(object):
 		self.im_prev = im_gray
 		self.keypoints_cv = keypoints_cv
 		toc = time.time()
-		#print ' estimate_time: {0:.0f}ms'.format(1000*(toc-tic))
 
 		self.tl = (nan,nan)
 		self.tr = (nan,nan)

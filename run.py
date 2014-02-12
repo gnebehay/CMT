@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 
 import argparse
-import bb
 import cv2
-import ipdb
 import CMT
-import gnebehay
 import numpy as np
 import os
 import time
+import util
 
 from numpy import *
 
@@ -61,7 +59,7 @@ if args.challenge:
 	im_gray0 = cv2.cvtColor(im0,cv2.COLOR_BGR2GRAY)
 	im_draw = np.copy(im0)
 
-	tl, br = (gnebehay.array_to_int_tuple(init_region[:2]), gnebehay.array_to_int_tuple(init_region[:2] + init_region[2:4])) 
+	tl, br = (util.array_to_int_tuple(init_region[:2]), util.array_to_int_tuple(init_region[:2] + init_region[2:4])) 
 
 	try: 
 		CMT.initialise(im_gray0, tl, br)
@@ -118,7 +116,7 @@ else:
 		bbox = np.array(values)
 
 		#Convert to point representation, adding singleton dimension
-		bbox = bb.bb2pts(bbox[None,:])
+		bbox = util.bb2pts(bbox[None,:])
 
 		#Squeeze
 		bbox = bbox[0,:]
@@ -127,7 +125,7 @@ else:
 		br = bbox[2:4]
 	else:
 		#Get rectangle input from user
-		(tl,br) = gnebehay.get_rect(im_draw)
+		(tl,br) = util.get_rect(im_draw)
 
 	print 'using', tl, br, 'as init bb'
 
@@ -158,10 +156,10 @@ else:
 			cv2.line(im_draw, CMT.br, CMT.bl, (255,0,0), 4)
 			cv2.line(im_draw, CMT.bl, CMT.tl, (255,0,0), 4)
 
-		gnebehay.draw_keypoints(CMT.tracked_keypoints, im_draw, (255,255,255))
+		util.draw_keypoints(CMT.tracked_keypoints, im_draw, (255,255,255))
 		#this is from simplescale
-		gnebehay.draw_keypoints(CMT.votes[:,:2], im_draw) #blue
-		gnebehay.draw_keypoints(CMT.outliers[:,:2], im_draw, (0,0,255))
+		util.draw_keypoints(CMT.votes[:,:2], im_draw) #blue
+		util.draw_keypoints(CMT.outliers[:,:2], im_draw, (0,0,255))
 
 		if args.output is not None:
 			#Original image
