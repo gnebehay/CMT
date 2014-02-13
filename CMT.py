@@ -102,8 +102,6 @@ class CMT(object):
 
 	def estimate(self, keypoints):
 
-		tic = time.time()
-
 		center = array((nan,nan))
 		scale_estimate = nan
 		med_rot = nan
@@ -224,7 +222,6 @@ class CMT(object):
 		(center, scale_estimate, rotation_estimate, tracked_keypoints) = self.estimate(tracked_keypoints)
 
 		#Detect keypoints, compute descriptors
-		tic = time.time()
 		keypoints_cv = self.detector.detect(im_gray) 
 		keypoints_cv, features = self.descriptor.compute(im_gray, keypoints_cv)
 
@@ -308,7 +305,7 @@ class CMT(object):
 					#If distance ratio is ok and absolute distance is ok and keypoint class is not background
 					if ratio < self.THR_RATIO and combined[bestInd] > self.THR_CONF and keypoint_class != 0:
 
-					#Add keypoint to active keypoints
+						#Add keypoint to active keypoints
 						new_kpt = append(location, keypoint_class)
 
 						#Check whether same class already exists
@@ -374,4 +371,3 @@ class CMT(object):
 			self.br = br
 
 			self.bb = np.array([min_x, min_y, max_x - min_x, max_y - min_y])
-
