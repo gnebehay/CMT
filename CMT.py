@@ -32,10 +32,10 @@ class CMT(object):
 		keypoints_cv = self.detector.detect(im_gray0)
 
 		#Remember keypoints that are in the rectangle as selected keypoints
-		ind = gnebehay.in_rect(keypoints_cv, tl, br)
+		ind = util.in_rect(keypoints_cv, tl, br)
 		selected_keypoints_cv = list(itertools.compress(keypoints_cv, ind))
 		selected_keypoints_cv, self.selected_features = self.descriptor.compute(im_gray0, selected_keypoints_cv)
-		selected_keypoints = gnebehay.keypoints_cv_to_np(selected_keypoints_cv)
+		selected_keypoints = util.keypoints_cv_to_np(selected_keypoints_cv)
 		num_selected_keypoints = len(selected_keypoints_cv)
 
 		if num_selected_keypoints == 0:
@@ -44,7 +44,7 @@ class CMT(object):
 		#Remember keypoints that are not in the rectangle as background keypoints
 		background_keypoints_cv = list(itertools.compress(keypoints_cv, ~ind))
 		background_keypoints_cv, background_features = self.descriptor.compute(im_gray0, background_keypoints_cv)
-		background_keypoints = gnebehay.keypoints_cv_to_np(background_keypoints_cv)
+		background_keypoints = util.keypoints_cv_to_np(background_keypoints_cv)
 
 		#Assign each keypoint a class starting from 1, background is 0
 		self.selected_classes = array(range(num_selected_keypoints)) + 1
@@ -150,7 +150,7 @@ class CMT(object):
 
 				#This distance might be 0 for some combinations,
 				#as it can happen that there is more than one keypoint at a single location
-				dists = gnebehay.L2norm(pts_allcombs0 - pts_allcombs1)
+				dists = util.L2norm(pts_allcombs0 - pts_allcombs1)
 
 				original_dists = self.squareform[class_ind1,class_ind2]
 
@@ -180,7 +180,7 @@ class CMT(object):
 					med_rot = 0;
 
 				keypoint_class = keypoints[:,2].astype(np.int)
-				votes = keypoints[:,:2] - scale_estimate * (gnebehay.rotate(self.springs[keypoint_class-1], med_rot))
+				votes = keypoints[:,:2] - scale_estimate * (util.rotate(self.springs[keypoint_class-1], med_rot))
 
 				#Remember all votes including outliers
 				self.votes = votes
@@ -220,7 +220,7 @@ class CMT(object):
 
 	def process_frame(self, im_gray):
 
-		tracked_keypoints, status = gnebehay.track(self.im_prev, im_gray, self.active_keypoints)
+		tracked_keypoints, status = util.track(self.im_prev, im_gray, self.active_keypoints)
 		(center, scale_estimate, rotation_estimate, tracked_keypoints) = self.estimate(tracked_keypoints)
 
 		#Detect keypoints, compute descriptors
@@ -283,7 +283,7 @@ class CMT(object):
 					relative_location = location - center
 
 					#Compute the distances to all springs
-					displacements = gnebehay.L2norm(scale_estimate * gnebehay.rotate(self.springs, -rotation_estimate) - relative_location)
+					displacements = util.L2norm(scale_estimate * util.rotate(self.springs, -rotation_estimate) - relative_location)
 
 					#For each spring, calculate weight
 					weight = displacements < self.THR_OUTLIER #Could be smooth function
@@ -358,10 +358,10 @@ class CMT(object):
 		if not any(isnan(self.center)) and self.active_keypoints.shape[0] > self.num_initial_keypoints / 10:
 			self.has_result = True
 
-			tl = gnebehay.array_to_int_tuple(center + scale_estimate*gnebehay.rotate(self.center_to_tl[None,:], rotation_estimate).squeeze())
-			tr = gnebehay.array_to_int_tuple(center + scale_estimate*gnebehay.rotate(self.center_to_tr[None,:], rotation_estimate).squeeze())
-			br = gnebehay.array_to_int_tuple(center + scale_estimate*gnebehay.rotate(self.center_to_br[None,:], rotation_estimate).squeeze())
-			bl = gnebehay.array_to_int_tuple(center + scale_estimate*gnebehay.rotate(self.center_to_bl[None,:], rotation_estimate).squeeze())
+			tl = util.array_to_int_tuple(center + scale_estimate*util.rotate(self.center_to_tl[None,:], rotation_estimate).squeeze())
+			tr = util.array_to_int_tuple(center + scale_estimate*util.rotate(self.center_to_tr[None,:], rotation_estimate).squeeze())
+			br = util.array_to_int_tuple(center + scale_estimate*util.rotate(self.center_to_br[None,:], rotation_estimate).squeeze())
+			bl = util.array_to_int_tuple(center + scale_estimate*util.rotate(self.center_to_bl[None,:], rotation_estimate).squeeze())
 
 			min_x = min((tl[0],tr[0],br[0],bl[0]))
 			min_y = min((tl[1],tr[1],br[1],bl[1]))
