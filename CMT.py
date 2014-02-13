@@ -14,9 +14,9 @@ class CMT(object):
 	DESCRIPTOR = 'BRISK'
 	DESC_LENGTH = 512
 	MATCHER = 'BruteForce-Hamming'
-	THR_OUTLIER = 20 #Completely arbritary
-	THR_CONF = 0.75 #Completely arbritary
-	THR_RATIO = 0.8 #Because Lowe said so
+	THR_OUTLIER = 20
+	THR_CONF = 0.75
+	THR_RATIO = 0.8
 
 	estimate_scale = True
 	estimate_rotation = True
