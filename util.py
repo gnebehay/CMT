@@ -131,7 +131,6 @@ def find_nearest_keypoints(keypoints, pos, number = 1):
 	ind = np.argsort(pos_to_keypoints)
 	return ind[:number]
 
-#Do not use, use cv2.drawKeypoints instead
 def draw_keypoints(keypoints, im, color=(255,0,0)):
 	
 	for k in keypoints:

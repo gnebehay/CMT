@@ -134,7 +134,6 @@ else:
 
 	frame = 1
 	while True:
-		tic_loop = time.time()
 		#Read image
 		status,im = cap.read()
 		if not status:
@@ -206,6 +205,3 @@ else:
 		frame += 1
 
 		print '{5:04d}: center: {0:.2f},{1:.2f} scale: {2:.2f}, active: {3:03d}, {4:04.0f}ms'.format(CMT.center[0],CMT.center[1],CMT.scale_estimate, CMT.active_keypoints.shape[0],1000*(toc-tic), frame)
-
-		toc_loop = time.time()
-		#print 'whole_time: {0:.0f}ms'.format(1000*(toc_loop-tic_loop))
