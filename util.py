@@ -15,33 +15,6 @@ def array_to_int_tuple(X):
 def L2norm(X):
 	return np.sqrt((X**2).sum(axis=1))
 
-click_pos = None
-
-def get_click(im, title='get_click'):
-	global click_pos
-	click_pos = None
-
-	cv2.namedWindow(title)
-	cv2.moveWindow(title, 100, 100)
-
-	def onMouse(event, x, y, flags, param):
-		global click_pos;
-
-		if flags & cv2.EVENT_FLAG_LBUTTON:
-			click_pos = (x,y)
-
-	cv2.setMouseCallback(title, onMouse)
-
-	cv2.imshow(title,im)
-
-	#Preview
-	while click_pos is None:
-		key = cv2.waitKey(10)
-
-	cv2.destroyWindow(title)
-
-	return click_pos
-
 current_pos = None
 tl = None
 br = None
@@ -113,13 +86,6 @@ def in_rect(keypoints, tl, br):
 def keypoints_cv_to_np(keypoints_cv):
 	keypoints = np.array([k.pt for k in keypoints_cv])
 	return keypoints
-
-def keypoints_np_to_cv(keypoints):
-	keypoints_cv = [];
-	for k in keypoints:
-		keypoints_cv.append((k[0], k[1]))
-
-	return keypoints_cv
 
 def find_nearest_keypoints(keypoints, pos, number = 1):
 	if type(pos) is tuple:
@@ -194,55 +160,14 @@ def rotate(pt, rad):
 
 	return pt_rot
 
-def overlap(T1,T2):
-
-	#Check for equal length
-	if not T1.shape[0] == T2.shape[0]:
-		raise Exception('Number of entries is inconsistent')
-
-	num_entries = T1.shape[0]
-
-	hrzInt = minimum(T1[:, 0] + T1[:, 2], T2[:, 0] + T2[:, 2]) - maximum(T1[:, 0], T2[:, 0])
-	hrzInt = maximum(0,hrzInt)
-	vrtInt = minimum(T1[:, 1] + T1[:, 3], T2[:, 1] + T2[:, 3]) - maximum(T1[:, 1], T2[:, 1])
-	vrtInt = maximum(0,vrtInt)
-	intersection = hrzInt * vrtInt
-
-	union = (T1[:, 2] * T1[:, 3]) + (T2[:, 2] * T2[:, 3]) - intersection
-
-	overlap = intersection / union
-
-	overlap[any(isnan(T1),1) | any(isnan(T2),1)] = nan
-
-	return overlap
-
 def br(bbs):
 
 	result = hstack((bbs[:,[0]] + bbs[:,[2]]-1, bbs[:,[1]] + bbs[:,[3]]-1))
 
 	return result
 
-def tl(bbs):
-
-	result = bbs[:,:2]
-
-	return result
-
-def pts2bb(pts):
-
-	bbs = hstack((pts[:,:2], pts[:,2:4]-pts[:,:2]+1))
-
-	return bbs
-
 def bb2pts(bbs):
 
 	pts = hstack((bbs[:,:2], br(bbs)))
 
 	return pts
-
-def write(fname, bbs):
-	savetxt(fname, bbs, fmt='%.2f', delimiter=',')
-
-def read(fname):
-	bbs = genfromtxt(fname, delimiter=',')
-	return bbs
