@@ -24,7 +24,7 @@ usage: run.py [-h] [--challenge] [--preview] [--no-preview] [--no-scale]
 * `--preview` Force preview
 * `--no-preview` Disable preview
 * `--no-scale` Disable scale estimation
-* `--no-rotation` Disable rotation estimation
+* `--with-rotation` Enable rotation estimation
 * `--bbox BBOX` Specify initial bounding box. Format: x,y,w,h
 * `--pause` Specify initial bounding box.
 * `--output-dir OUTPUT` Specify a directory for output data.

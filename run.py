@@ -19,7 +19,7 @@ parser.add_argument('--challenge', dest='challenge', action='store_true', help='
 parser.add_argument('--preview', dest='preview', action='store_const', const=True, default=None, help='Force preview')
 parser.add_argument('--no-preview', dest='preview', action='store_const', const=False, default=None,help='Disable preview')
 parser.add_argument('--no-scale', dest='estimate_scale', action='store_false', help='Disable scale estimation')
-parser.add_argument('--no-rotation', dest='estimate_rotation', action='store_false', help='Disable rotation estimation')
+parser.add_argument('--with-rotation', dest='estimate_rotation', action='store_true', help='Enable rotation estimation')
 parser.add_argument('--bbox', dest='bbox', help='Specify initial bounding box.')
 parser.add_argument('--pause', dest='pause', action='store_true', help='Specify initial bounding box.')
 parser.add_argument('--output-dir', dest='output', help='Specify a directory for output data.')
