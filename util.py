@@ -151,6 +151,9 @@ def track(im_prev, im_gray, keypoints, THR_FB = 20):
 	return keypoints_tracked, status 
 
 def rotate(pt, rad):
+	if(rad == 0):
+		return pt
+		
 	pt_rot = np.empty(pt.shape)
 
 	s, c = [f(rad) for f in (math.sin, math.cos)]
