@@ -252,9 +252,6 @@ class CMT(object):
 
 				classes = self.database_classes
 
-				#Sort in descending order
-				sorted_conf = argsort(combined)[::-1] #reverse
-
 				#Get best and second best index
 				bestInd = matches[0].trainIdx
 				secondBestInd = matches[1].trainIdx
