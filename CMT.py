@@ -228,16 +228,23 @@ class CMT(object):
 		#Create list of active keypoints
 		active_keypoints = zeros((0,3)) 
 
+		#Get the best two matches for each feature
+		matches_all = self.matcher.knnMatch(features, self.features_database, 2)
+		# Get all matches for selected features
+		if not any(isnan(center)):
+			selected_matches_all = self.matcher.knnMatch(features, self.selected_features, len(self.selected_features))
+
+
 		#For each keypoint and its descriptor
 		if len(keypoints_cv) > 0:
-			for (keypoint_cv, feature) in zip(keypoints_cv, features):
+			for i in range(len(keypoints_cv)):
 
 				#Retrieve keypoint location
-				location = np.array(keypoint_cv.pt)
+				location = np.array(keypoints_cv[i].pt)
 
 				#First: Match over whole image
 				#Compute distances to all descriptors
-				matches = self.matcher.match(self.features_database, feature[None,:])
+				matches = matches_all[i]
 				distances = np.array([m.distance for m in matches])
 
 				#Convert distances to confidences, do not weight
@@ -245,21 +252,18 @@ class CMT(object):
 
 				classes = self.database_classes
 
-				#Sort in descending order
-				sorted_conf = argsort(combined)[::-1] #reverse
-
 				#Get best and second best index
-				bestInd = sorted_conf[0]
-				secondBestInd = sorted_conf[1]
+				bestInd = matches[0].trainIdx
+				secondBestInd = matches[1].trainIdx
 
 				#Compute distance ratio according to Lowe
-				ratio = (1-combined[bestInd]) / (1-combined[secondBestInd])
+				ratio = (1-combined[0]) / (1-combined[1])
 
 				#Extract class of best match
 				keypoint_class = classes[bestInd]
 
 				#If distance ratio is ok and absolute distance is ok and keypoint class is not background
-				if ratio < self.THR_RATIO and combined[bestInd] > self.THR_CONF and keypoint_class != 0:
+				if ratio < self.THR_RATIO and combined[0] > self.THR_CONF and keypoint_class != 0:
 
 					#Add keypoint to active keypoints
 					new_kpt = append(location, keypoint_class)
@@ -270,8 +274,11 @@ class CMT(object):
 				if not any(isnan(center)):
 
 					#Compute distances to initial descriptors
-					matches = self.matcher.match(self.selected_features, feature[None,:])
+					matches = selected_matches_all[i]				
 					distances = np.array([m.distance for m in matches])
+					# Re-order the distances based on indexing
+					idxs = np.argsort(np.array([m.trainIdx for m in matches]))
+					distances = distances[idxs]					
 
 					#Convert distances to confidences
 					confidences = 1 - distances / self.DESC_LENGTH
