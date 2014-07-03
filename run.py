@@ -5,6 +5,7 @@ import cv2
 import CMT
 import numpy as np
 import os
+import sys
 import time
 import util
 
@@ -91,6 +92,11 @@ else:
 		cap = cv2.VideoCapture(0)
 		if preview is None:
 			preview = True
+
+	#Check if videocapture is working
+	if not cap.isOpened():
+		print 'Unable to open video input.'
+		sys.exit(1)
 
 	while preview:
 		status, im = cap.read()
