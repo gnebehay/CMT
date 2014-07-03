@@ -66,3 +66,9 @@ It is also possible to specify the initial bounding box on the command line.
 python run.py --bbox=123,85,60,140 /home/cmt/test.avi
 ```
 
+Use a sequence of numbered image files as an input:
+```
+python run.py sequence_dir/{:08d}.jpg
+```
+Here, {:08d} is a python format string that is expanded to 00000001.jpg, 00000002.jpg, etc.
+

@@ -3,6 +3,23 @@ import math
 import numpy as np
 from numpy import *
 
+class FileVideoCapture(object):
+
+	def __init__(self, path):
+		self.path = path
+		self.frame = 1
+
+	def isOpened(self):
+		im = cv2.imread(self.path.format(self.frame))
+		return im != None
+			
+	def read(self):
+		im = cv2.imread(self.path.format(self.frame))
+		status = im != None
+		if status:
+			self.frame += 1
+		return status, im
+
 def squeeze_pts(X):
 	X = X.squeeze()
 	if len(X.shape) == 1:

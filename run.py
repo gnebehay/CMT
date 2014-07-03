@@ -84,9 +84,19 @@ else:
 	preview = args.preview
 
 	if args.inputpath is not None:
-		cap = cv2.VideoCapture(args.inputpath)
+
+		#If a path to a file was given, assume it is a single video file
+		if os.path.isfile(args.inputpath):
+			cap = cv2.VideoCapture(args.inputpath)
+
+		#Otherwise assume it is a format string for reading images
+		else:
+			cap = util.FileVideoCapture(args.inputpath)
+
+		#By default do not show preview in both cases
 		if preview is None:
 			preview = False
+
 	else:
 		#If no input path was specified, open camera device
 		cap = cv2.VideoCapture(0)
