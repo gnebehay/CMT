@@ -2,7 +2,7 @@
 
 import argparse
 import cv2
-from numpy import *
+from numpy import empty, nan
 import os
 import sys
 import time

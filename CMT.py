@@ -1,6 +1,7 @@
 import cv2
 import itertools
-from numpy import *
+from numpy import array, zeros, vstack, hstack, math, nan, argsort, median, \
+	argmax, isnan, append
 import scipy.cluster
 import scipy.spatial
 import time

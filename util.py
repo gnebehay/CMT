@@ -1,5 +1,5 @@
 import cv2
-from numpy import *
+from numpy import math, hstack
 
 import numpy as np
 
