@@ -25,6 +25,7 @@ parser.add_argument('--bbox', dest='bbox', help='Specify initial bounding box.')
 parser.add_argument('--pause', dest='pause', action='store_true', help='Specify initial bounding box.')
 parser.add_argument('--output-dir', dest='output', help='Specify a directory for output data.')
 parser.add_argument('--quiet', dest='quiet', action='store_true',help='Do not show graphical output (Useful in combination with --output-dir ).')
+parser.add_argument('--skip', dest='skip', action='store', default=None, help='Skip the first n frames', type=int)
 
 args = parser.parse_args()
 
@@ -107,6 +108,10 @@ else:
 	if not cap.isOpened():
 		print 'Unable to open video input.'
 		sys.exit(1)
+
+	#Skip first frames if required
+	if args.skip is not None:
+		cap.set(cv2.cv.CV_CAP_PROP_POS_FRAMES, args.skip)
 
 	while preview:
 		status, im = cap.read()
