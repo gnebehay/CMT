@@ -45,7 +45,7 @@ class CMT(object):
 		# Remember keypoints that are not in the rectangle as background keypoints
 		background_keypoints_cv = list(itertools.compress(keypoints_cv, ~ind))
 		background_keypoints_cv, background_features = self.descriptor.compute(im_gray0, background_keypoints_cv)
-		background_keypoints = util.keypoints_cv_to_np(background_keypoints_cv)
+		_ = util.keypoints_cv_to_np(background_keypoints_cv)
 
 		# Assign each keypoint a class starting from 1, background is 0
 		self.selected_classes = array(range(num_selected_keypoints)) + 1
@@ -219,7 +219,7 @@ class CMT(object):
 
 	def process_frame(self, im_gray):
 
-		tracked_keypoints, status = util.track(self.im_prev, im_gray, self.active_keypoints)
+		tracked_keypoints, _ = util.track(self.im_prev, im_gray, self.active_keypoints)
 		(center, scale_estimate, rotation_estimate, tracked_keypoints) = self.estimate(tracked_keypoints)
 
 		# Detect keypoints, compute descriptors
@@ -342,7 +342,7 @@ class CMT(object):
 				active_keypoints = tracked_keypoints
 
 		# Update object state estimate
-		active_keypoints_before = active_keypoints
+		_ = active_keypoints
 		self.center = center
 		self.scale_estimate = scale_estimate
 		self.rotation_estimate = rotation_estimate
@@ -350,7 +350,7 @@ class CMT(object):
 		self.active_keypoints = active_keypoints
 		self.im_prev = im_gray
 		self.keypoints_cv = keypoints_cv
-		toc = time.time()
+		_ = time.time()
 
 		self.tl = (nan, nan)
 		self.tr = (nan, nan)

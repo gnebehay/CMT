@@ -79,7 +79,7 @@ def get_rect(im, title='get_rect'):
 			cv2.rectangle(im_draw, tl, current_pos, (255, 0, 0))
 
 		cv2.imshow(title, im_draw)
-		key = cv2.waitKey(10)
+		_ = cv2.waitKey(10)
 
 	cv2.destroyWindow(title)
 
@@ -142,10 +142,10 @@ def track(im_prev, im_gray, keypoints, THR_FB=20):
 		pts = keypoints[:, None, :2].astype(np.float32)
 
 		# Calculate forward optical flow for prev_location
-		nextPts, status, err = cv2.calcOpticalFlowPyrLK(im_prev, im_gray, pts)
+		nextPts, status, _ = cv2.calcOpticalFlowPyrLK(im_prev, im_gray, pts)
 
 		# Calculate backward optical flow for prev_location
-		pts_back, status_back, err_back = cv2.calcOpticalFlowPyrLK(im_gray, im_prev, nextPts)
+		pts_back, _, _ = cv2.calcOpticalFlowPyrLK(im_gray, im_prev, nextPts)
 
 		# Remove singleton dimension
 		pts_back = squeeze_pts(pts_back)
