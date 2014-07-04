@@ -5,6 +5,7 @@ import cv2
 import CMT
 import numpy as np
 import os
+import sys
 import time
 import util
 
@@ -84,15 +85,31 @@ else:
 	preview = args.preview
 
 	if args.inputpath is not None:
-		cap = cv2.VideoCapture(args.inputpath)
+
+		#If a path to a file was given, assume it is a single video file
+		if os.path.isfile(args.inputpath):
+			cap = cv2.VideoCapture(args.inputpath)
+
+		#Otherwise assume it is a format string for reading images
+		else:
+			cap = util.FileVideoCapture(args.inputpath)
+
+		#By default do not show preview in both cases
 		if preview is None:
 			preview = False
+
 	else:
 		#If no input path was specified, open camera device
 		cap = cv2.VideoCapture(0)
 		if preview is None:
 			preview = True
 
+	#Check if videocapture is working
+	if not cap.isOpened():
+		print 'Unable to open video input.'
+		sys.exit(1)
+
+	#Skip first frames if required
 	if args.skip is not None:
 		cap.set(cv2.cv.CV_CAP_PROP_POS_FRAMES, args.skip)
 
