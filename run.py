@@ -2,14 +2,15 @@
 
 import argparse
 import cv2
-import CMT
-import numpy as np
+from numpy import *
 import os
 import sys
 import time
+
+import CMT
+import numpy as np
 import util
 
-from numpy import *
 
 CMT = CMT.CMT()
 

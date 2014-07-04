@@ -1,12 +1,13 @@
 import cv2
-import util
 import itertools
-import numpy as np
+from numpy import *
 import scipy.cluster
 import scipy.spatial
 import time
 
-from numpy import *
+import numpy as np
+import util
+
 
 class CMT(object):
 

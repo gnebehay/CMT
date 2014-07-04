@@ -1,7 +1,8 @@
 import cv2
-import math
-import numpy as np
 from numpy import *
+
+import numpy as np
+
 
 class FileVideoCapture(object):
 
