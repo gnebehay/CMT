@@ -22,6 +22,7 @@ If you use our algorithm in scientific work, please cite our publication
 * OpenCV-Python (>= 2.4)
 * NumPy
 * SciPy
+* optional: ipdb (for debugging the code)
 
 Note for Windows users: if you are unable to read video files, please follow this suggestion: http://stackoverflow.com/questions/11699298/opencv-2-4-videocapture-not-working-on-windows
 
