@@ -91,9 +91,18 @@ else:
 		if os.path.isfile(args.inputpath):
 			cap = cv2.VideoCapture(args.inputpath)
 
+			#Skip first frames if required
+			if args.skip is not None:
+				cap.set(cv2.cv.CV_CAP_PROP_POS_FRAMES, args.skip)
+
+
 		# Otherwise assume it is a format string for reading images
 		else:
 			cap = util.FileVideoCapture(args.inputpath)
+
+			#Skip first frames if required
+			if args.skip is not None:
+				cap.frame = 1 + args.skip
 
 		# By default do not show preview in both cases
 		if preview is None:
@@ -109,10 +118,6 @@ else:
 	if not cap.isOpened():
 		print 'Unable to open video input.'
 		sys.exit(1)
-
-	# Skip first frames if required
-	if args.skip is not None:
-		cap.set(cv2.cv.CV_CAP_PROP_POS_FRAMES, args.skip)
 
 	while preview:
 		status, im = cap.read()

@@ -43,6 +43,7 @@ usage: run.py [-h] [--challenge] [--preview] [--no-preview] [--no-scale]
 * `--with-rotation` Enable rotation estimation
 * `--bbox BBOX` Specify initial bounding box. Format: x,y,w,h
 * `--pause` Pause after each frame
+* `--skip N` Skips N frames of the video input
 * `--output-dir OUTPUT` Specify a directory for output data.
 * `--quiet` Do not show graphical output (Useful in combination with --output-dir).
 
