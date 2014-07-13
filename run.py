@@ -223,7 +223,7 @@ else:
 			if key == 'q':
 				break
 			if key == 'd':
-				ipdb.set_trace()
+				import ipdb; ipdb.set_trace()
 
 		# Remember image
 		im_prev = im_gray
