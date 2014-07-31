@@ -239,6 +239,7 @@ class CMT(object):
 
 		# For each keypoint and its descriptor
 		if len(keypoints_cv) > 0:
+			transformed_springs = scale_estimate * util.rotate(self.springs, -rotation_estimate)
 			for i in range(len(keypoints_cv)):
 
 				# Retrieve keypoint location
@@ -289,7 +290,7 @@ class CMT(object):
 					relative_location = location - center
 
 					# Compute the distances to all springs
-					displacements = util.L2norm(scale_estimate * util.rotate(self.springs, -rotation_estimate) - relative_location)
+					displacements = util.L2norm(transformed_springs - relative_location)
 
 					# For each spring, calculate weight
 					weight = displacements < self.THR_OUTLIER  # Could be smooth function
