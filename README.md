@@ -4,7 +4,12 @@ a novel keypoint-based method for long-term model-free object tracking in a
 combined matching-and-tracking framework.
 Details can be found on the [project page](http://www.gnebehay.com/cmt)
 and in our [publication](http://www.gnebehay.com/publications/wacv_2014/wacv_2014.pdf).
+The Python implementation in this repository is platform-independent and runs
+on Linux, Windows and OS X.
 
+#License
+CMT is freely available under the [3-clause BSD license][1],
+meaning that you can basically do with the code whatever you want.
 If you use our algorithm in scientific work, please cite our publication
 ```
 @inproceedings{Nebehay2014WACV,
@@ -74,3 +79,4 @@ python run.py sequence_dir/{:08d}.jpg
 ```
 Here, {:08d} is a python format string that is expanded to 00000001.jpg, 00000002.jpg, etc.
 
+[1]: http://en.wikipedia.org/wiki/BSD_licenses#3-clause_license_.28.22Revised_BSD_License.22.2C_.22New_BSD_License.22.2C_or_.22Modified_BSD_License.22.29
