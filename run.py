@@ -62,7 +62,7 @@ if args.challenge:
 	im_gray0 = cv2.cvtColor(im0, cv2.COLOR_BGR2GRAY)
 	im_draw = np.copy(im0)
 
-	tl, br = (util.array_to_int_tuple(init_region[:2]), util.array_to_int_tuple(init_region[:2] + init_region[2:4])) 
+	tl, br = (util.array_to_int_tuple(init_region[:2]), util.array_to_int_tuple(init_region[:2] + init_region[2:4] - 1))
 
 	try: 
 		CMT.initialise(im_gray0, tl, br)
