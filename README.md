@@ -24,7 +24,7 @@ If you use our algorithm in scientific work, please cite our publication
 
 # Dependencies
 * Python
-* OpenCV-Python (>= 2.4)
+* OpenCV-Python (>= 2.4, < 3)
 * NumPy
 * SciPy
 * optional: ipdb (for debugging the code)
