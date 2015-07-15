@@ -23,7 +23,7 @@ parser.add_argument('--no-preview', dest='preview', action='store_const', const=
 parser.add_argument('--no-scale', dest='estimate_scale', action='store_false', help='Disable scale estimation')
 parser.add_argument('--with-rotation', dest='estimate_rotation', action='store_true', help='Enable rotation estimation')
 parser.add_argument('--bbox', dest='bbox', help='Specify initial bounding box.')
-parser.add_argument('--pause', dest='pause', action='store_true', help='Specify initial bounding box.')
+parser.add_argument('--pause', dest='pause', action='store_true', help='Pause after every frame and wait for any key.')
 parser.add_argument('--output-dir', dest='output', help='Specify a directory for output data.')
 parser.add_argument('--quiet', dest='quiet', action='store_true', help='Do not show graphical output (Useful in combination with --output-dir ).')
 parser.add_argument('--skip', dest='skip', action='store', default=None, help='Skip the first n frames', type=int)
@@ -64,7 +64,7 @@ if args.challenge:
 
 	tl, br = (util.array_to_int_tuple(init_region[:2]), util.array_to_int_tuple(init_region[:2] + init_region[2:4] - 1))
 
-	try: 
+	try:
 		CMT.initialise(im_gray0, tl, br)
 		while frame < num_frames:
 			im = cv2.imread(images[frame])
@@ -212,7 +212,7 @@ else:
 			with open('{0}/bbox_{1:08d}.csv'.format(args.output, frame), 'w') as f:
 				f.write('x y\n')
 				# Duplicate entry tl is not a mistake, as it is used as a drawing instruction
-				np.savetxt(f, np.array((CMT.tl, CMT.tr, CMT.br, CMT.bl, CMT.tl)), fmt='%.2f') 
+				np.savetxt(f, np.array((CMT.tl, CMT.tr, CMT.br, CMT.bl, CMT.tl)), fmt='%.2f')
 
 		if not args.quiet:
 			cv2.imshow('main', im_draw)
