@@ -13,7 +13,7 @@ class FileVideoCapture(object):
 	def isOpened(self):
 		im = cv2.imread(self.path.format(self.frame))
 		return im != None
-			
+
 	def read(self):
 		im = cv2.imread(self.path.format(self.frame))
 		status = im != None
@@ -38,52 +38,41 @@ tl = None
 br = None
 
 def get_rect(im, title='get_rect'):
-
-	global current_pos
-	global tl
-	global br
-	global released_once
-
-	current_pos = None
-	tl = None
-	br = None
-	released_once = False
+	mouse_params = {'tl': None, 'br': None, 'current_pos': None,
+		'released_once': False}
 
 	cv2.namedWindow(title)
 	cv2.moveWindow(title, 100, 100)
 
 	def onMouse(event, x, y, flags, param):
-		global current_pos
-		global tl
-		global br
-		global released_once
 
-		current_pos = (x, y)
+		param['current_pos'] = (x, y)
 
-		if tl is not None and not (flags & cv2.EVENT_FLAG_LBUTTON):
-			released_once = True
+		if param['tl'] is not None and not (flags & cv2.EVENT_FLAG_LBUTTON):
+			param['released_once'] = True
 
 		if flags & cv2.EVENT_FLAG_LBUTTON:
-			if tl is None:
-				tl = current_pos
-			elif released_once:
-				br = current_pos
+			if param['tl'] is None:
+				param['tl'] = param['current_pos']
+			elif param['released_once']:
+				param['br'] = param['current_pos']
 
-	cv2.setMouseCallback(title, onMouse)
+	cv2.setMouseCallback(title, onMouse, mouse_params)
 	cv2.imshow(title, im)
 
-	while br is None:
+	while mouse_params['br'] is None:
 		im_draw = np.copy(im)
 
-		if tl is not None:
-			cv2.rectangle(im_draw, tl, current_pos, (255, 0, 0))
+		if mouse_params['tl'] is not None:
+			cv2.rectangle(im_draw, mouse_params['tl'],
+				mouse_params['current_pos'], (255, 0, 0))
 
 		cv2.imshow(title, im_draw)
 		_ = cv2.waitKey(10)
 
 	cv2.destroyWindow(title)
 
-	return (tl, br)
+	return (mouse_params['tl'], mouse_params['br'])
 
 def in_rect(keypoints, tl, br):
 	if type(keypoints) is list:
@@ -116,7 +105,7 @@ def find_nearest_keypoints(keypoints, pos, number=1):
 	return ind[:number]
 
 def draw_keypoints(keypoints, im, color=(255, 0, 0)):
-	
+
 	for k in keypoints:
 		radius = 3  # int(k.size / 2)
 		center = (int(k[0]), int(k[1]))
@@ -165,13 +154,13 @@ def track(im_prev, im_gray, keypoints, THR_FB=20):
 		keypoints_tracked[:, :2] = nextPts
 
 	else:
-		keypoints_tracked = np.array([]) 
-	return keypoints_tracked, status 
+		keypoints_tracked = np.array([])
+	return keypoints_tracked, status
 
 def rotate(pt, rad):
 	if(rad == 0):
 		return pt
-		
+
 	pt_rot = np.empty(pt.shape)
 
 	s, c = [f(rad) for f in (math.sin, math.cos)]
