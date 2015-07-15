@@ -72,7 +72,12 @@ def get_rect(im, title='get_rect'):
 
 	cv2.destroyWindow(title)
 
-	return (mouse_params['tl'], mouse_params['br'])
+	tl = (min(mouse_params['tl'][0], mouse_params['br'][0]),
+		min(mouse_params['tl'][1], mouse_params['br'][1]))
+	br = (max(mouse_params['tl'][0], mouse_params['br'][0]),
+		max(mouse_params['tl'][1], mouse_params['br'][1]))
+
+	return (tl, br)
 
 def in_rect(keypoints, tl, br):
 	if type(keypoints) is list:
