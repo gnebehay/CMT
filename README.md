@@ -12,13 +12,13 @@ CMT is freely available under the [3-clause BSD license][1],
 meaning that you can basically do with the code whatever you want.
 If you use our algorithm in scientific work, please cite our publication
 ```
-@inproceedings{Nebehay2014WACV,
+@inproceedings{Nebehay2015CVPR,
     author = {Nebehay, Georg and Pflugfelder, Roman},
-    booktitle = {Winter Conference on Applications of Computer Vision},
-    month = mar,
+    booktitle = {Computer Vision and Pattern Recognition},
+    month = jun,
     publisher = {IEEE},
-    title = {Consensus-based Matching and Tracking of Keypoints for Object Tracking},
-    year = {2014}
+    title = {Clustering of {Static-Adaptive} Correspondences for Deformable Object Tracking},
+    year = {2015}
 }
 ```
 
