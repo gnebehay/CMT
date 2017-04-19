@@ -7,7 +7,7 @@ and in our [publication](http://www.gnebehay.com/publications/wacv_2014/wacv_201
 The Python implementation in this repository is platform-independent and runs
 on Linux, Windows and OS X.
 
-#License
+# License
 CMT is freely available under the [3-clause BSD license][1],
 meaning that you can basically do with the code whatever you want.
 If you use our algorithm in scientific work, please cite our publication
